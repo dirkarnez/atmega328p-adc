@@ -1,4 +1,8 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdbool.h>
 #define F_CPU 16000000UL
+
 #define NORMAL_MODE_VALUE(timer_bit, n_seconds, prescaler) ((int)(((1UL) << (timer_bit)) - ((n_seconds) * ((F_CPU) / (prescaler)))))
 #define CTC_MODE_VALUE(n_seconds, prescaler) ((int)(((n_seconds) * ((F_CPU) / (prescaler))) - (1UL)))
 
