@@ -80,6 +80,7 @@ int main(void)
 	{
 		ADCSRA |= (1 << ADSC);						// start conversion
 		while ((ADCSRA & (1 << ADIF)) == 0);		// wait for conversion to finish
+		ADCSRA |= (1 << ADIF);  
 		PORTD = ADCL;								// give the low byte to PORTD
 		PORTB = ADCH;								// give the high byte to PORTB
 	}
