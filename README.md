@@ -1,5 +1,5 @@
-EIE3105_ATmega328P_Application
-==============================
+atmega328p-adc
+==============
 ### GCC
 - [Optimize Options (Using the GNU Compiler Collection (GCC))](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html)
 
