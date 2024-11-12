@@ -30,11 +30,13 @@ void adc_init()
 	// ADMUX = 0xC0;  // 2.56V Vref, ADC0 single ended input, data will be right-justified
 
 	// ADMUX = 0b01000000;
+	/* set input channel to read */
+	// ADMUX = 0x40 | (channel & 0x07); // 0100 0000 | (channel & 0000 0100)
 	// ADCSRA |= (1 << ADEN) | (0 << ADPS2) | (1 << ADPS1) | (0 << ADPS0);
 	ADMUX =
 		// Reference voltage
 		(0 << REFS1) | // 7
-		(0 << REFS0) | // 6
+		(1 << REFS0) | // 6
 
 		(0 << ADLAR) | // 5, nothing on 4 right-justified
 
@@ -42,6 +44,7 @@ void adc_init()
 		(0 << MUX2) |  // 2	// ADC0
 		(0 << MUX1) |  // 1	// ADC0
 		(0 << MUX0);   // 0	// ADC0
+		
 
 	ADCSRA =
 		(1 << ADEN) |  // 7, enable ADC
@@ -59,7 +62,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-
 int main(void)
 {
 	DDRB = 0xFF;   // make Port B an output
@@ -68,9 +70,12 @@ int main(void)
 	DDRC = 0;	   // make Port C an input for ADC input
 
 	adc_init();
-
-
 	
+// |-----|-----|-----|-----|-----|-----|-----|-----|
+// | 7   | 6   | 5   | 4   | 3   | 2   | 1   | 0   |
+// |-----|-----|-----|-----|-----|-----|-----|-----|
+// | PB3 | PB2 | PB1 | PB0 | PD3 | PD2 | PD1 | PD0 |
+// |-----|-----|-----|-----|-----|-----|-----|-----|
 	while (1)
 	{
 		ADCSRA |= (1 << ADSC);						// start conversion
