@@ -26,36 +26,56 @@ https://github.com/search?q=repo%3Aarduino%2FArduinoCore-avr+UBRRL&type=code
 
 void adc_init()
 {
-	// ADCSRA = 0x87; // make ADC enable and select ck/128
-	// ADMUX = 0xC0;  // 2.56V Vref, ADC0 single ended input, data will be right-justified
+	/*
+	| REFS1 | REFS0 | Vref            |                               |
+	|-------|-------|-----------------|-------------------------------|
+	| 0     | 0     | AREF pin        | Set externally                |
+	| 0     | 1     | AVCC pin        | Same as VCC                   |
+	| 1     | 0     | Reserved        | -                             |
+	| 1     | 1     | Internal 2.56 V | Fixed regardless of VCC value |
 
-	// ADMUX = 0b01000000;
-	/* set input channel to read */
-	// ADMUX = 0x40 | (channel & 0x07); // 0100 0000 | (channel & 0000 0100)
-	// ADCSRA |= (1 << ADEN) | (0 << ADPS2) | (1 << ADPS1) | (0 << ADPS0);
+	MUX4:0
+	00000 ADC0
+	00001 ADC1
+	00010 ADC2
+	00011 ADC3
+	00100 ADC4
+	00101 ADC5
+	00110 ADC6
+	00111 ADC7
+	*/
 	ADMUX =
-		// Reference voltage
-		(0 << REFS1) | // 7
-		(1 << REFS0) | // 6
-
-		(0 << ADLAR) | // 5, nothing on 4 right-justified
-
-		(0 << MUX3) |  // 3 // ADC0
-		(0 << MUX2) |  // 2	// ADC0
-		(0 << MUX1) |  // 1	// ADC0
-		(0 << MUX0);   // 0	// ADC0
+		(0 << REFS1) | // 7, Reference Selection Bits
+		(1 << REFS0) | // 6, Reference Selection Bits
+		(0 << ADLAR) | // 5, ADC Left Adjust Results, (usually set 0 for right-adjusting)
+		(0 << MUX3) |  // 3, Analog Channel and Gain Selection Bits
+		(0 << MUX2) |  // 2, Analog Channel and Gain Selection Bits
+		(0 << MUX1) |  // 1, Analog Channel and Gain Selection Bits
+		(0 << MUX0);   // 0, Analog Channel and Gain Selection Bits
 		
 
 	ADCSRA =
-		(1 << ADEN) |  // 7, enable ADC
-		(0 << ADSC) |  // 6
-		(0 << ADATE) | // 5
-		(0 << ADIF) |  // 4
-		(0 << ADIE) |  // 3
-		// Prescaler, use 1 1 1 if not time critcal
-		(1 << ADPS2) | // 2
-		(1 << ADPS1) | // 1
-		(1 << ADPS0);  // 0
+		(1 << ADEN) |  // 7, ADC Enable, This bit enables or disables the ADC. Setting this bit to one will enable the ADC, and clearing this bit to zero will disable it even while a conversion is in progress.
+		(0 << ADSC) |  // 6, ADC Start Conversion
+		(0 << ADATE) | // 5, ADC Auto Trigger Enable
+		(0 << ADIF) |  // 4, ADC Interrupt Flag
+		(0 << ADIE) |  // 3, ADC Interrupt Enable
+		// Prescaler below, use 1 1 1 if not time critcal
+		/*
+		| ADPS2 | ADPS1 | ADPS0 | ADC Clock |
+		|-------|-------|-------|-----------|
+		| 0     | 0     | 0     | Reserved  |
+		| 0     | 0     | 1     | CK/2      |
+		| 0     | 1     | 0     | CK/4      |
+		| 0     | 1     | 1     | CK/8      |
+		| 1     | 0     | 0     | CK/16     |
+		| 1     | 0     | 1     | CK/32     |
+		| 1     | 1     | 0     | CK/64     |
+		| 1     | 1     | 1     | CK/128    |
+		*/
+		(1 << ADPS2) | // 2, ADC Prescaler Select Bits
+		(1 << ADPS1) | // 1, ADC Prescaler Select Bits
+		(1 << ADPS0);  // 0, ADC Prescaler Select Bits
 }
 
 long map(long x, long in_min, long in_max, long out_min, long out_max) {
@@ -64,6 +84,26 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 
 int main(void)
 {
+	int const UP_BTN = 2;
+	int const DOWN_BTN = 4;
+	int const LEFT_BTN = 5;
+	int const RIGHT_BTN = 3;
+	int const E_BTN = 6;
+	int const F_BTN = 7;
+	int const JOYSTICK_BTN = 8;
+	// int const JOYSTICK_AXIS_X = A0;
+	// int const JOYSTICK_AXIS_Y = A1;
+	int buttons[] = {UP_BTN, DOWN_BTN, LEFT_BTN, RIGHT_BTN, E_BTN, F_BTN, JOYSTICK_BTN};
+
+
+
+
+
+
+
+
+
+
 	DDRB = 0xFF;   // make Port B an output
 	DDRD = 0xFF;   // make Port D an output
 
