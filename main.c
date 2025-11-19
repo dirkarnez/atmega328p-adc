@@ -84,26 +84,6 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 
 int main(void)
 {
-	int const UP_BTN = 2;
-	int const DOWN_BTN = 4;
-	int const LEFT_BTN = 5;
-	int const RIGHT_BTN = 3;
-	int const E_BTN = 6;
-	int const F_BTN = 7;
-	int const JOYSTICK_BTN = 8;
-	// int const JOYSTICK_AXIS_X = A0;
-	// int const JOYSTICK_AXIS_Y = A1;
-	int buttons[] = {UP_BTN, DOWN_BTN, LEFT_BTN, RIGHT_BTN, E_BTN, F_BTN, JOYSTICK_BTN};
-
-
-
-
-
-
-
-
-
-
 	DDRB = 0xFF;   // make Port B an output
 	DDRD = 0xFF;   // make Port D an output
 
